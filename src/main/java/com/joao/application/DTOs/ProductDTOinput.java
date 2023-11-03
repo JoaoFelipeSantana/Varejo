@@ -14,14 +14,12 @@ public class ProductDTOinput {
                            String desription_product,
                            float price,
                            int amount,
-                           int stock_min,
-                           boolean status_product) {
+                           int stock_min) {
         this.name_product = name_product;
         this.desription_product = desription_product;
         this.price = price;
         this.amount = amount;
         this.stock_min = stock_min;
-        this.status_product = status_product;
     }
 
     // ===== MÉTODOS ACESSORES =====
@@ -47,7 +45,4 @@ public class ProductDTOinput {
         return stock_min;
     }
 
-    public boolean isStatus_product() {
-        return status_product;
-    }
 }
