@@ -4,7 +4,7 @@ public class Product {
     // ===== ATRIBUTOS =====
     private String name_product;
     private String description_product;
-    private float price;
+    private double price;
     private int amount;
     private int stock_min;
     private String dtcreate;
@@ -16,7 +16,7 @@ public class Product {
 
     public Product(String name_product,
                    String description_product,
-                   float price, int amount,
+                   double price, int amount,
                    int stock_min,
                    String dtcreate,
                    String dtupdate,
@@ -41,7 +41,7 @@ public class Product {
         return description_product;
     }
 
-    public float getPrice() {
+    public double getPrice() {
         return price;
     }
 
