@@ -3,7 +3,7 @@ package com.joao.application.DTOs;
 public class ProductDTOinput {
     private String name_product;
     private String desription_product;
-    private float price;
+    private double price;
     private int amount;
     private int stock_min;
     private boolean status_product;
@@ -12,7 +12,7 @@ public class ProductDTOinput {
     // ===== MÉTODO CONTRUTOR =====
     public ProductDTOinput(String name_product,
                            String desription_product,
-                           float price,
+                           double price,
                            int amount,
                            int stock_min) {
         this.name_product = name_product;
@@ -33,7 +33,7 @@ public class ProductDTOinput {
         return desription_product;
     }
 
-    public float getPrice() {
+    public double getPrice() {
         return price;
     }
 
