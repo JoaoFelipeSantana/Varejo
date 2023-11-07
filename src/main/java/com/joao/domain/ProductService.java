@@ -89,10 +89,39 @@ public class ProductService {
         return products_list;
     }
 
-    public ResultSet selectONEproduct(int id) throws SQLException, ClassNotFoundException {
+    public JsonObject selectONEproduct(int id) throws SQLException, ClassNotFoundException {
         ProductDAO productDAO = new ProductDAO();
 
-        ResultSet oneProduct = productDAO.selectONE(id);
+        JsonObject oneProduct = new JsonObject();
+
+        ResultSet allProducts = productDAO.selectALL();
+
+        int flag = 2;
+
+        while (allProducts.next()) {
+            if (allProducts.getInt("id") == id) {
+                flag = 1;
+            }
+        }
+
+        if (flag == 1) {
+            ResultSet product = productDAO.selectONE(id);
+
+            while(product.next()) {
+                oneProduct.addProperty("id", product.getInt("id"));
+                oneProduct.addProperty("name_product", product.getString("name_product"));
+                oneProduct.addProperty("description", product.getString("description"));
+                oneProduct.addProperty("price", product.getFloat("price"));
+                oneProduct.addProperty("amount", product.getInt("amount"));
+                oneProduct.addProperty("stock_min", product.getInt("stock_min"));
+                oneProduct.addProperty("dtcreate", product.getString("dtcreate"));
+                oneProduct.addProperty("dtupdate", product.getString("dtupdate"));
+                oneProduct.addProperty("status", product.getBoolean("status"));
+            }
+        }
+        else if(flag == 2) {
+            oneProduct.addProperty("msg", "Produto não encontrado");
+        }
         return oneProduct;
     }
 }
