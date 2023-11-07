@@ -1,5 +1,7 @@
 package com.joao.domain;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.joao.application.DTOs.ProductDTOinput;
 import com.joao.infrastructure.DAOs.ProductDAO;
 import com.joao.infrastructure.entity.Product;
@@ -62,11 +64,29 @@ public class ProductService {
         return data;
     }
 
-    public ResultSet selectALLproducts() throws SQLException, ClassNotFoundException {
+    public JsonArray selectALLproducts() throws SQLException, ClassNotFoundException {
         ProductDAO productDAO = new ProductDAO();
 
         ResultSet allProducts = productDAO.selectALL();
-        return allProducts;
+
+        JsonArray products_list = new JsonArray();
+        JsonObject product = new JsonObject();
+
+        while(allProducts.next()) {
+            product.addProperty("id", allProducts.getInt("id"));
+            product.addProperty("name_product", allProducts.getString("name_product"));
+            product.addProperty("description", allProducts.getString("description"));
+            product.addProperty("price", allProducts.getFloat("price"));
+            product.addProperty("amount", allProducts.getInt("amount"));
+            product.addProperty("stock_min", allProducts.getInt("stock_min"));
+            product.addProperty("dtcreate", allProducts.getString("dtcreate"));
+            product.addProperty("dtupdate", allProducts.getString("dtupdate"));
+            product.addProperty("status", allProducts.getBoolean("status"));
+
+            products_list.add(product);
+        }
+
+        return products_list;
     }
 
     public ResultSet selectONEproduct(int id) throws SQLException, ClassNotFoundException {
