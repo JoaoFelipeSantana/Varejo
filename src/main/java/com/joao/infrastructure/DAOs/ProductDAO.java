@@ -2,10 +2,7 @@ package com.joao.infrastructure.DAOs;
 
 import com.joao.infrastructure.entity.Product;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 
 import java.util.ResourceBundle;
 
@@ -38,5 +35,24 @@ public class ProductDAO {
         stm.execute();
 
         return rb.getString("success.createProduct");
+    }
+
+    public ResultSet selectALL() throws SQLException, ClassNotFoundException {
+        String sql_command = "SELECT * FROM varejo.products";
+
+        ResultSet rsProduct = conectionDB_products().createStatement().executeQuery(sql_command);
+        return rsProduct;
+    }
+
+    public ResultSet selectONE(int id_product) throws SQLException, ClassNotFoundException {
+        PreparedStatement stm;
+
+        String sql_command = "SELECT * FROM varejo.products WHERE id = ?";
+
+        stm = conectionDB_products().prepareStatement(sql_command);
+        stm.setInt(1, id_product    );
+
+        ResultSet rsProduct = stm.executeQuery();
+        return rsProduct;
     }
 }
