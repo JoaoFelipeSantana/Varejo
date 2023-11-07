@@ -6,6 +6,7 @@ import com.joao.infrastructure.entity.Product;
 
 import org.json.JSONObject;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import java.time.LocalDateTime;
@@ -20,19 +21,14 @@ public class ProductService {
         JSONObject data = new JSONObject();
         ProductDAO productDAO = new ProductDAO();
 
-        String name;
-        String description;
-        double price;
-        int amount;
-        int stock_min;
+        String name = productDTO.getName_product();
+        String description = productDTO.getDesription_product();
+        double price = productDTO.getPrice();
+        int amount = productDTO.getAmount();
+        int stock_min = productDTO.getStock_min();
 
         String str_msg;
 
-        name = productDTO.getName_product();
-        description = productDTO.getDesription_product();
-        price = productDTO.getPrice();
-        amount = productDTO.getAmount();
-        stock_min = productDTO.getStock_min();
 
         if (name.equals("")) {
             str_msg = rb.getString("error.emptyName");
@@ -59,12 +55,24 @@ public class ProductService {
 
             Product product = new Product(name, description, price, amount, stock_min, dtf.format(dtcreate), dtupdate, status_product);
 
-            // encaminhar a entidade Product para a DAO
             str_msg = productDAO.createProduct(product);
         }
 
         data.append("msg", str_msg);
-
         return data;
+    }
+
+    public ResultSet selectALLproducts() throws SQLException, ClassNotFoundException {
+        ProductDAO productDAO = new ProductDAO();
+
+        ResultSet allProducts = productDAO.selectALL();
+        return allProducts;
+    }
+
+    public ResultSet selectONEproduct(int id) throws SQLException, ClassNotFoundException {
+        ProductDAO productDAO = new ProductDAO();
+
+        ResultSet oneProduct = productDAO.selectONE(id);
+        return oneProduct;
     }
 }
