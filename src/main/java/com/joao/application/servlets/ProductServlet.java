@@ -1,5 +1,6 @@
 package com.joao.application.servlets;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.joao.application.DTOs.ProductDTOinput;
 import com.joao.domain.ProductService;
@@ -67,53 +68,23 @@ public class ProductServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         try {
+            if (request.getParameter("id") == null) {
+                JsonArray products_list = productService.selectALLproducts();
 
-            if(request.getParameter("id") == null) {
-                ResultSet allProducts = productService.selectALLproducts();
-
-                JsonObject products_list = new JsonObject();
-
-                while(allProducts.next()) {
-                    products_list.addProperty("id", allProducts.getInt("id"));
-                    products_list.addProperty("name_product", allProducts.getString("name_product"));
-                    products_list.addProperty("description", allProducts.getString("description"));
-                    products_list.addProperty("price", allProducts.getFloat("price"));
-                    products_list.addProperty("amount", allProducts.getInt("amount"));
-                    products_list.addProperty("stock_min", allProducts.getInt("stock_min"));
-                    products_list.addProperty("dtcreate", allProducts.getString("dtcreate"));
-                    products_list.addProperty("dtupdate", allProducts.getString("dtupdate"));
-                    products_list.addProperty("status", allProducts.getBoolean("status"));
-
-                    out.println(products_list.toString());
-                }
+                out.println(products_list.toString());
             }
-            else{
+
+            else {
                 int id = Integer.parseInt(request.getParameter("id"));
+                JsonObject product = productService.selectONEproduct(id);
 
-                ResultSet oneProduct = productService.selectONEproduct(id);
-
-                JsonObject product = new JsonObject();
-
-                while(oneProduct.next()) {
-                    product.addProperty("id", oneProduct.getInt("id"));
-                    product.addProperty("name_product", oneProduct.getString("name_product"));
-                    product.addProperty("description", oneProduct.getString("description"));
-                    product.addProperty("price", oneProduct.getFloat("price"));
-                    product.addProperty("amount", oneProduct.getInt("amount"));
-                    product.addProperty("stock_min", oneProduct.getInt("stock_min"));
-                    product.addProperty("dtcreate", oneProduct.getString("dtcreate"));
-                    product.addProperty("dtupdate", oneProduct.getString("dtupdate"));
-                    product.addProperty("status", oneProduct.getBoolean("status"));
-
-                    out.println(product.toString());
-                }
+                out.println(product.toString());
             }
         }
-        catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
+        catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        } catch (ClassNotFoundException ex) {
+            throw new RuntimeException(ex);
         }
     }
 }
