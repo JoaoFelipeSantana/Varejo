@@ -1,6 +1,6 @@
 package com.joao.application.DTOs;
 
-public class ProductDTOinput {
+public class ProductDTOinputCreate {
     private String name_product;
     private String desription_product;
     private double price;
@@ -10,11 +10,11 @@ public class ProductDTOinput {
 
 
     // ===== MÉTODO CONTRUTOR =====
-    public ProductDTOinput(String name_product,
-                           String desription_product,
-                           double price,
-                           int amount,
-                           int stock_min) {
+    public ProductDTOinputCreate(String name_product,
+                                 String desription_product,
+                                 double price,
+                                 int amount,
+                                 int stock_min) {
         this.name_product = name_product;
         this.desription_product = desription_product;
         this.price = price;
