@@ -1,6 +1,7 @@
 package com.joao.infrastructure.DAOs;
 
-import com.joao.infrastructure.entity.Product;
+import com.joao.infrastructure.entity.ProductCreate;
+import com.joao.infrastructure.entity.ProductUpdate;
 
 import java.sql.*;
 
@@ -14,7 +15,7 @@ public class ProductDAO {
         return connect;
     }
 
-    public String createProduct(Product product) throws SQLException, ClassNotFoundException {
+    public String createProduct(ProductCreate product) throws SQLException, ClassNotFoundException {
         PreparedStatement stm;
         ResourceBundle rb = ResourceBundle.getBundle("messages");
 
@@ -69,5 +70,25 @@ public class ProductDAO {
         stm.execute();
 
         return rb.getString("success.deleteProduct");
+    }
+
+    public String update(int id, ProductUpdate product) throws SQLException, ClassNotFoundException {
+        ResourceBundle rb = ResourceBundle.getBundle("messages");
+
+        PreparedStatement stm;
+
+        String sql_command = "UPDATE varejo.products SET description = ?, price = ?, amount = ?, stock_min = ?, dtupdate = ? WHERE id = ?";
+
+        stm = conectionDB_products().prepareStatement(sql_command);
+        stm.setString(1, product.getDescription());
+        stm.setDouble(2, product.getPrice());
+        stm.setInt(3, product.getAmount());
+        stm.setInt(4, product.getStock_min());
+        stm.setString(5, product.getDtupdate());
+        stm.setInt(6, id);
+
+        stm.execute();
+
+        return rb.getString("success.updateProduct");
     }
 }
