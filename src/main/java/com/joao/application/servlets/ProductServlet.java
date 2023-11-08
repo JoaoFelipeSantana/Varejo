@@ -2,7 +2,8 @@ package com.joao.application.servlets;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.joao.application.DTOs.ProductDTOinput;
+import com.joao.application.DTOs.ProductDTOinputCreate;
+import com.joao.application.DTOs.ProductDTOinputUpdate;
 import com.joao.domain.ProductService;
 
 import org.json.JSONObject;
@@ -15,7 +16,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class ProductServlet extends HttpServlet {
@@ -48,7 +48,7 @@ public class ProductServlet extends HttpServlet {
             int amount = (int) data_request.get("amount");
             int stock_min = (int) data_request.get("stock_min");
 
-            ProductDTOinput productDTO = new ProductDTOinput(name, description, price, amount, stock_min);
+            ProductDTOinputCreate productDTO = new ProductDTOinputCreate(name, description, price, amount, stock_min);
 
             data = productService.createProduct(productDTO);
             out.println(data.get("msg").toString());
@@ -99,6 +99,48 @@ public class ProductServlet extends HttpServlet {
             JsonObject product = productService.deleteProduct(id);
 
             out.println(product.toString());
+        }
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    protected void doPut (HttpServletRequest request, HttpServletResponse response) throws IOException {
+        PrintWriter out = response.getWriter();
+
+        StringBuilder json = new StringBuilder();
+        ProductService productService = new ProductService();
+
+        try {
+            int id = Integer.parseInt(request.getParameter("id"));
+
+            String line;
+            JsonObject data;
+
+            BufferedReader reader = request.getReader();
+            while ((line= reader.readLine()) != null) {
+                json.append(line);
+            }
+
+            JSONObject data_request = new JSONObject(json.toString());
+
+            String description = (String) data_request.get("description");
+
+            String str_price = (String) data_request.get("price");
+            str_price = str_price.replaceAll(",", ".");
+            double price = Double.parseDouble(str_price);
+
+            int amount = (int) data_request.get("amount");
+            int stock_min = (int) data_request.get("stock_min");
+
+            ProductDTOinputUpdate productDTOinputUpdate = new ProductDTOinputUpdate(description, price, amount, stock_min);
+
+            data = productService.updateProduct(id, productDTOinputUpdate);
+
+            out.println(data.toString());
         }
         catch (SQLException e) {
             throw new RuntimeException(e);
