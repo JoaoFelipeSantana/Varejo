@@ -1,6 +1,6 @@
 package com.joao.infrastructure.entity;
 
-public class Product {
+public class ProductCreate {
     // ===== ATRIBUTOS =====
     private String name_product;
     private String description_product;
@@ -14,13 +14,13 @@ public class Product {
     // ===== MÉTODO CONTRUTOR =====
 
 
-    public Product(String name_product,
-                   String description_product,
-                   double price, int amount,
-                   int stock_min,
-                   String dtcreate,
-                   String dtupdate,
-                   boolean status_product) {
+    public ProductCreate(String name_product,
+                         String description_product,
+                         double price, int amount,
+                         int stock_min,
+                         String dtcreate,
+                         String dtupdate,
+                         boolean status_product) {
 
         this.name_product = name_product;
         this.description_product = description_product;
