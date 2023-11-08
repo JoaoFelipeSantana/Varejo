@@ -72,9 +72,11 @@ public class ProductService {
         ResultSet allProducts = productDAO.selectALL();
 
         JsonArray products_list = new JsonArray();
-        JsonObject product = new JsonObject();
+
 
         while(allProducts.next()) {
+            JsonObject product = new JsonObject();
+
             product.addProperty("id", allProducts.getInt("id"));
             product.addProperty("name_product", allProducts.getString("name_product"));
             product.addProperty("description", allProducts.getString("description"));
