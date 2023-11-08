@@ -44,15 +44,30 @@ public class ProductDAO {
         return rsProduct;
     }
 
-    public ResultSet selectONE(int id_product) throws SQLException, ClassNotFoundException {
+    public ResultSet selectONE(int id) throws SQLException, ClassNotFoundException {
         PreparedStatement stm;
 
         String sql_command = "SELECT * FROM varejo.products WHERE id = ?";
 
         stm = conectionDB_products().prepareStatement(sql_command);
-        stm.setInt(1, id_product    );
+        stm.setInt(1, id);
 
         ResultSet rsProduct = stm.executeQuery();
         return rsProduct;
+    }
+
+    public String delete(int id) throws SQLException, ClassNotFoundException {
+        ResourceBundle rb = ResourceBundle.getBundle("messages");
+
+        PreparedStatement stm;
+
+        String sql_command = "DELETE FROM varejo.products WHERE id = ?";
+
+        stm = conectionDB_products().prepareStatement(sql_command);
+        stm.setInt(1, id);
+
+        stm.execute();
+
+        return rb.getString("success.deleteProduct");
     }
 }
