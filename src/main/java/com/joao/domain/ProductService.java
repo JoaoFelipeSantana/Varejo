@@ -91,8 +91,9 @@ public class ProductService {
 
     public JsonObject selectONEproduct(int id) throws SQLException, ClassNotFoundException {
         ProductDAO productDAO = new ProductDAO();
-
         JsonObject oneProduct = new JsonObject();
+
+        ResourceBundle rb = ResourceBundle.getBundle("messages");
 
         ResultSet allProducts = productDAO.selectALL();
 
@@ -120,8 +121,34 @@ public class ProductService {
             }
         }
         else if(flag == 2) {
-            oneProduct.addProperty("msg", "Produto não encontrado");
+            oneProduct.addProperty("msg", rb.getString("error.findProduct"));
         }
         return oneProduct;
+    }
+
+    public JsonObject deleteProduct(int id) throws SQLException, ClassNotFoundException {
+        ProductDAO productDAO = new ProductDAO();
+        JsonObject product = new JsonObject();
+
+        ResourceBundle rb = ResourceBundle.getBundle("messages");
+        ResultSet allProducts = productDAO.selectALL();
+
+        int flag = 2;
+        while (allProducts.next()) {
+            if (allProducts.getInt("id") == id) {
+                flag = 1;
+            }
+        }
+
+        if (flag == 1) {
+            String msg_delete = productDAO.delete(id);
+
+            product.addProperty("msg", msg_delete);
+        }
+        else if (flag == 2) {
+            product.addProperty("msg", rb.getString("error.findProduct"));
+        }
+
+    return product;
     }
 }
