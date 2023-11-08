@@ -2,10 +2,12 @@ package com.joao.domain;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.joao.application.DTOs.ProductDTOinput;
+import com.joao.application.DTOs.ProductDTOinputCreate;
+import com.joao.application.DTOs.ProductDTOinputUpdate;
 import com.joao.infrastructure.DAOs.ProductDAO;
-import com.joao.infrastructure.entity.Product;
+import com.joao.infrastructure.entity.ProductCreate;
 
+import com.joao.infrastructure.entity.ProductUpdate;
 import org.json.JSONObject;
 
 import java.sql.ResultSet;
@@ -18,7 +20,7 @@ import java.util.ResourceBundle;
 
 public class ProductService {
 
-    public JSONObject createProduct(ProductDTOinput productDTO) throws SQLException, ClassNotFoundException {
+    public JSONObject createProduct(ProductDTOinputCreate productDTO) throws SQLException, ClassNotFoundException {
         ResourceBundle rb = ResourceBundle.getBundle("messages");
         JSONObject data = new JSONObject();
         ProductDAO productDAO = new ProductDAO();
@@ -55,7 +57,7 @@ public class ProductService {
 
             Boolean status_product = true;
 
-            Product product = new Product(name, description, price, amount, stock_min, dtf.format(dtcreate), dtupdate, status_product);
+            ProductCreate product = new ProductCreate(name, description, price, amount, stock_min, dtf.format(dtcreate), dtupdate, status_product);
 
             str_msg = productDAO.createProduct(product);
         }
@@ -150,5 +152,58 @@ public class ProductService {
         }
 
     return product;
+    }
+
+    public JsonObject updateProduct(int id, ProductDTOinputUpdate productUpdtae) throws SQLException, ClassNotFoundException {
+        ProductDAO productDAO = new ProductDAO();
+        JsonObject msg_return = new JsonObject();
+
+        ResourceBundle rb = ResourceBundle.getBundle("messages");
+        ResultSet allProducts = productDAO.selectALL();
+
+        // Vreficando se o id é válido
+        int flag_1 = 2;
+        while (allProducts.next()) {
+            if (allProducts.getInt("id") == id) {
+                flag_1 = 1;
+            }
+        }
+
+        if (flag_1 == 1) {
+            // Verificando se os campos estão iguais
+            ResultSet product_one = productDAO.selectONE(id);
+
+            int flag_2 = 2;
+            while(product_one.next()) {
+                if (product_one.getString("description").equals(productUpdtae.getDescription()) &&
+                product_one.getDouble("price") == productUpdtae.getPrice() &&
+                product_one.getInt("amount") == productUpdtae.getAmount() &&
+                product_one.getInt("stock_min") == productUpdtae.getStock_min()) {
+                    flag_2 = 1;
+                }
+            }
+
+            if (flag_2 == 1) {
+                msg_return.addProperty("msg", rb.getString("error.sameEdition"));
+            }
+            else if(flag_2 == 2) {
+                String description = productUpdtae.getDescription();
+                double price = productUpdtae.getPrice();
+                int amount = productUpdtae.getAmount();
+                int stock_min = productUpdtae.getStock_min();
+
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                LocalDateTime dtupdate = LocalDateTime.now();
+
+                ProductUpdate productUpdate = new ProductUpdate(description, price, amount, stock_min, dtf.format(dtupdate));
+
+                msg_return.addProperty("msg", productDAO.update(id, productUpdate));
+            }
+        }
+        else if (flag_1 == 2) {
+            msg_return.addProperty("msg", rb.getString("error.findProduct"));
+        }
+
+    return msg_return;
     }
 }
