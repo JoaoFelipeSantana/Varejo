@@ -28,7 +28,6 @@ public class ProductServlet extends HttpServlet {
         String line;
 
         try {
-
             PrintWriter out = response.getWriter();
             BufferedReader reader = request.getReader();
 
@@ -83,8 +82,29 @@ public class ProductServlet extends HttpServlet {
         }
         catch (SQLException ex) {
             throw new RuntimeException(ex);
-        } catch (ClassNotFoundException ex) {
+        }
+        catch (ClassNotFoundException ex) {
             throw new RuntimeException(ex);
+        }
+    }
+
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        ProductService productService = new ProductService();
+
+        PrintWriter out = response.getWriter();
+
+        try {
+            int id = Integer.parseInt(request.getParameter("id"));
+
+            JsonObject product = productService.deleteProduct(id);
+
+            out.println(product.toString());
+        }
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
     }
 }
